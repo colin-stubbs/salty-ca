@@ -41,6 +41,6 @@ x509-ca:
               revoked:
                 dead_device:
                   serial_number: D6:D2:DC:D8:4D:5C:C0:F4
-                  not_after: "\"2016-01-01 00:00:00\""
+                  not_after: "\"2025-01-01 00:00:00\""
                   revocation_date: "\"2015-02-25 00:00:00\""
                   reason: cessationOfOperation

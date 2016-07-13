@@ -10,12 +10,15 @@ x509-ca:
   root:
     org_root_ca:
       CN: "Some Org Root CA"
+      crlDistributionPoints: URI:http://some.org/crl/root.crl
       sub:
         org_a1_ca:
           CN: "Some Org A1 CA"
+          crlDistributionPoints: URI:http://some.org/crl/a1.crl
           sub:
             org_user_ca:
               CN: "Some Org A1 User CA"
+              crlDistributionPoints: URI:http://some.org/crl/a1_user.crl
               create:
                 test_user1:
                   CN: "Monkey Magic"
@@ -33,6 +36,7 @@ x509-ca:
                   days_valid: 10000
             org_server_ca:
               CN: "Some Org A1 Server CA"
+              crlDistributionPoints: URI:http://some.org/crl/a1_server.crl
               create:
                 test_server:
                   CN: "Test Server"
@@ -47,6 +51,7 @@ x509-ca:
                   backup: True
             org_device_ca:
               CN: "Some Org A1 Device CA"
+              crlDistributionPoints: URI:http://some.org/crl/a1_device.crl
               create:
                 test_device:
                   CN: "Test Device"

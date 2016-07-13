@@ -15,22 +15,18 @@
 
 {{ output_dir }}:
   file.directory:
-    - mode: 0755
     - makedirs: True
 
 {{ cert_dir }}:
   file.directory:
-    - mode: 0750
     - makedirs: True
 
 {{ key_dir }}:
   file.directory:
-    - mode: 0700
     - makedirs: True
 
 {{ crl_dir }}:
   file.directory:
-    - mode: 0755
     - makedirs: True
 
 {% set optional_attributes = ['GN', 'SN', 'public_key', 'csr', 'extendedKeyUsage', 'issuerAltName', 'subjectAltName', 'crlDistributionPoints', 'issuingDistributionPoint', 'certificatePolicies', 'policyConstraints', 'inhibitAnyPolicy', 'nameConstraints', 'noCheck', 'nsComment', 'nsCertType', 'days_valid', 'version', 'serial_number', 'serial_bits', 'algorithm', 'copypath', 'signing_policy', 'backup'] %}
@@ -62,6 +58,7 @@
     {%- if signing_cert != '' %}
     - signing_cert: {{ signing_cert }}
     {%- endif %}
+    - public_key: {{ key_dir }}/{{ current_name }}.key
     - CN: {{ salt['pillar.get'](current_path ~ ':CN', 'ERROR') }}
     - C: {{ salt['pillar.get'](current_path ~ ':C', default_c) }}
     - ST: {{ salt['pillar.get'](current_path ~ ':ST', default_st) }}
@@ -69,8 +66,8 @@
     - Email: {{ salt['pillar.get'](current_path ~':Email', default_email) }}
     - O: {{ salt['pillar.get'](current_path ~ ':O', default_o) }}
     - OU: {{ salt['pillar.get'](current_path ~ ':OU', default_ou) }}
-    - basicConstraints: {{ salt['pillar.get'](current_path ~ ':basicConstraints', 'CA:true') }}
-    - keyUsage: {{ salt['pillar.get'](current_path ~ ':keyUsage', 'critical cRLSign, keyCertSign') }}
+    - basicConstraints: {{ salt['pillar.get'](current_path ~ ':basicConstraints', 'critical CA:true') }}
+    - keyUsage: {{ salt['pillar.get'](current_path ~ ':keyUsage', 'critical digitalSignature, cRLSign, keyCertSign') }}
     - subjectKeyIdentifier: {{ salt['pillar.get'](current_path ~ ':subjectKeyIdentifier', 'hash') }}
     - authorityKeyIdentifier: {{ salt['pillar.get'](current_path ~ ':authorityKeyIdentifier', 'keyid,issuer:always') }}
     {%- for attribute in optional_attributes %}
@@ -136,10 +133,13 @@
 
 {{ cert_dir }}/{{ current_name }}.crt:
   x509.certificate_managed:
-    - signing_private_key: {{ salt['pillar.get'](current_path ~ ':signing_private_key', key_dir ~ '/' ~ current_name ~ '.key') }}
+    - signing_private_key: {{ salt['pillar.get'](current_path ~ ':signing_private_key', key_dir ~ '/' ~ root_name ~ '.key') }}
     {%- if signing_cert != '' %}
     - signing_cert: {{ signing_cert }}
+    {%- else %}
+    - signing_cert: {{ cert_dir }}/{{ root_name }}.crt
     {%- endif %}
+    - public_key: {{ key_dir }}/{{ current_name }}.key
     - CN: {{ salt['pillar.get'](current_path ~ ':CN', 'ERROR') }}
     - C: {{ salt['pillar.get'](current_path ~ ':C', default_c) }}
     - ST: {{ salt['pillar.get'](current_path ~ ':ST', default_st) }}
@@ -147,8 +147,8 @@
     - Email: {{ salt['pillar.get'](current_path ~':Email', default_email) }}
     - O: {{ salt['pillar.get'](current_path ~ ':O', default_o) }}
     - OU: {{ salt['pillar.get'](current_path ~ ':OU', default_ou) }}
-    - basicConstraints: {{ salt['pillar.get'](current_path ~ ':basicConstraints', 'CA:true') }}
-    - keyUsage: {{ salt['pillar.get'](current_path ~ ':keyUsage', 'critical cRLSign, keyCertSign') }}
+    - basicConstraints: {{ salt['pillar.get'](current_path ~ ':basicConstraints', 'critical CA:true') }}
+    - keyUsage: {{ salt['pillar.get'](current_path ~ ':keyUsage', 'critical digitalSignature, cRLSign, keyCertSign') }}
     - subjectKeyIdentifier: {{ salt['pillar.get'](current_path ~ ':subjectKeyIdentifier', 'hash') }}
     - authorityKeyIdentifier: {{ salt['pillar.get'](current_path ~ ':authorityKeyIdentifier', 'keyid,issuer:always') }}
     {%- for attribute in optional_attributes %}
@@ -214,10 +214,13 @@
 
 {{ cert_dir }}/{{ current_name }}.crt:
   x509.certificate_managed:
-    - signing_private_key: {{ salt['pillar.get'](current_path ~ ':signing_private_key', key_dir ~ '/' ~ current_name ~ '.key') }}
+    - signing_private_key: {{ salt['pillar.get'](current_path ~ ':signing_private_key', key_dir ~ '/' ~ int_name ~ '.key') }}
     {%- if signing_cert != '' %}
     - signing_cert: {{ signing_cert }}
+    {%- else %}
+    - signing_cert: {{ cert_dir }}/{{ int_name }}.crt
     {%- endif %}
+    - public_key: {{ key_dir }}/{{ current_name }}.key
     - CN: {{ salt['pillar.get'](current_path ~ ':CN', 'ERROR') }}
     - C: {{ salt['pillar.get'](current_path ~ ':C', default_c) }}
     - ST: {{ salt['pillar.get'](current_path ~ ':ST', default_st) }}
@@ -225,8 +228,8 @@
     - Email: {{ salt['pillar.get'](current_path ~':Email', default_email) }}
     - O: {{ salt['pillar.get'](current_path ~ ':O', default_o) }}
     - OU: {{ salt['pillar.get'](current_path ~ ':OU', default_ou) }}
-    - basicConstraints: {{ salt['pillar.get'](current_path ~ ':basicConstraints', 'CA:true') }}
-    - keyUsage: {{ salt['pillar.get'](current_path ~ ':keyUsage', 'critical cRLSign, keyCertSign') }}
+    - basicConstraints: {{ salt['pillar.get'](current_path ~ ':basicConstraints', 'critical CA:true, pathlen:0') }}
+    - keyUsage: {{ salt['pillar.get'](current_path ~ ':keyUsage', 'critical digitalSignature, cRLSign, keyCertSign') }}
     - subjectKeyIdentifier: {{ salt['pillar.get'](current_path ~ ':subjectKeyIdentifier', 'hash') }}
     - authorityKeyIdentifier: {{ salt['pillar.get'](current_path ~ ':authorityKeyIdentifier', 'keyid,issuer:always') }}
     {%- for attribute in optional_attributes %}

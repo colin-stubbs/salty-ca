@@ -8,18 +8,30 @@ x509-ca:
     OU: ICT
     Email: security@some.org
   root:
-    equate_root_ca:
+    org_root_ca:
       CN: "Some Org Root CA"
       sub:
-        equate_a1_ca:
+        org_a1_ca:
           CN: "Some Org A1 CA"
           sub:
-            equate_user_ca:
+            org_user_ca:
               CN: "Some Org A1 User CA"
               create:
-                test_user:
-                  CN: "Test User"
-            equate_server_ca:
+                test_user1:
+                  CN: "Monkey Magic"
+                  GN: "Monkey"
+                  SN: "Magic"
+                  extendedKeyUsage: clientAuth
+                  nsCertType: client
+                  days_valid: 10000
+                test_user2:
+                  CN: "Trippi Tarka"
+                  GN: "Trippi"
+                  SN: "Tarka"
+                  extendedKeyUsage: clientAuth
+                  nsCertType: client
+                  days_valid: 10000
+            org_server_ca:
               CN: "Some Org A1 Server CA"
               create:
                 test_server:
@@ -33,7 +45,7 @@ x509-ca:
                   serial_bits: 128
                   algorithm: sha512
                   backup: True
-            equate_device_ca:
+            org_device_ca:
               CN: "Some Org A1 Device CA"
               create:
                 test_device:

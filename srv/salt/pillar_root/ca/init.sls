@@ -24,10 +24,23 @@ x509-ca:
               create:
                 test_server:
                   CN: "Test Server"
+                  extendedKeyUsage: serverAuth, clientAuth
+                  subjectAltName: DNS:localhost.localdomain IP:127.0.0.1
+                  nsComment: blah
+                  nsCertType: server
+                  days_valid: 10000
+                  version: 10
+                  serial_bits: 128
+                  algorithm: sha512
+                  backup: True
             equate_device_ca:
               CN: "Some Org A1 Device CA"
               create:
                 test_device:
                   CN: "Test Device"
-
-
+              revoked:
+                dead_device:
+                  serial_number: D6:D2:DC:D8:4D:5C:C0:F4
+                  not_after: "\"2016-01-01 00:00:00\""
+                  revocation_date: "\"2015-02-25 00:00:00\""
+                  reason: cessationOfOperation

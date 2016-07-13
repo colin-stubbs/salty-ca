@@ -1,0 +1,16 @@
+# /etc/salt/minion
+
+file_client: local
+
+root_dir: /example/root/salty-ca
+
+file_roots:
+  base:
+    - /example/root/salty-ca/srv/salt/file_root
+
+pillar_roots:
+  base:
+    - /example/root/salty-ca/srv/salt/pillar_root
+
+# EOF
+
